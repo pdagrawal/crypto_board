@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 
 from . import views
 
-app_name="accounts"
+app_name = "accounts"
 urlpatterns = [
     path("profile", views.ProfileView.as_view(), name="profile"),
     # Django Auth
