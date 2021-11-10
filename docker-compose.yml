@@ -4,9 +4,9 @@ x-service-volumes: &service-volumes
   - ./:/app/:rw,cached
 
 x-database-variables: &database-variables
-  POSTGRES_DB: postgres
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: crypto_board_pg_db
+  POSTGRES_USER: crypto_postgres_user
+  POSTGRES_PASSWORD: almsuJA19@l
 
 x-app-variables: &app-variables
   <<: *database-variables
@@ -36,3 +36,7 @@ services:
     ports:
       - "5432:5432"
     environment: *database-variables
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
