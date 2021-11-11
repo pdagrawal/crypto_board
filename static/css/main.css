@@ -6,4 +6,21 @@
     #main {
         padding-top: 104px;
     }
+    .masthead {
+        padding-top: 6rem;
+        padding-bottom: 6rem;
+    }
+}
+
+/* .masthead .masthead-avatar {
+    width: 170px ~;
+    height: 170px;
+} */
+
+.masthead {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    background-image: url("../img/home_background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
