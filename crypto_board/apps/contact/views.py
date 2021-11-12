@@ -1,3 +1,4 @@
+import bleach
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from django.core.mail import send_mail
@@ -12,9 +13,9 @@ def contact(request: HttpRequest) -> HttpResponse:
     elif request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data["name"]
-            email = form.cleaned_data["email"]
-            message = form.cleaned_data["message"]
+            name = bleach.clean(form.cleaned_data["name"])
+            email = bleach.clean(form.cleaned_data["email"])
+            message = bleach.clean(form.cleaned_data["message"])
             send_mail(f"{name} sent an email", message, email, [settings.DEFAULT_FROM_EMAIL])
             return render(request, "contact.html", {"form": ContactForm(), "success": True})
     else:
