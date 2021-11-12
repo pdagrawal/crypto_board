@@ -12,15 +12,22 @@
     }
 }
 
-/* .masthead .masthead-avatar {
-    width: 170px ~;
-    height: 170px;
-} */
-
 .masthead {
     padding-top: 6rem;
     padding-bottom: 6rem;
     background-image: url("../img/home_background.jpg");
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.page-section {
+    padding: 3rem 0;
+}
+.divider-custom {
+    margin: 0;
+}
+
+.form-floating > .form-control, .form-floating > .form-select {
+    height: 4.5rem;
+    line-height: 1.25;
 }
