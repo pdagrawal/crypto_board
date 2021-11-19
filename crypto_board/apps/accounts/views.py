@@ -1,10 +1,13 @@
 import bleach
+from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib import messages
+
+from crypto_board import settings
 
 from .forms import SignupForm
 
@@ -29,9 +32,8 @@ def signup(request: HttpRequest) -> HttpResponse:
             user.last_name = last_name
             user.save()
             messages.success(request, "Your account has been successfully created.")
+            send_mail(f"Welcome to CryptoBoard!", "Signup email content", settings.DEFAULT_FROM_EMAIL, [email])
             return redirect('accounts:login')
-            # send_mail(f"{name} sent an email", message, email, [settings.DEFAULT_FROM_EMAIL])
-            return render(request, "accounts/signup.html", {"form": SignupForm(), "success": True})
     else:
         raise NotImplementedError
     return render(request, "accounts/signup.html", {"form": form})
