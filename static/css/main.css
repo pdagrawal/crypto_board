@@ -23,6 +23,9 @@
 .page-section {
     padding: 3rem 0;
 }
+.page-section#signup {
+    padding: 1.5rem 0;
+}
 .divider-custom {
     margin: 0;
 }
@@ -30,4 +33,20 @@
 .form-floating > .form-control, .form-floating > .form-select {
     height: 4.5rem;
     line-height: 1.25;
+}
+
+.page-section#signup .form-floating label {
+    font-size: 1.2rem;
+}
+
+.page-section#signup .page-section-heading {
+    font-size: 2.5rem;
+}
+
+.page-section#signup .svg-inline--fa.fa-w-18 {
+    width: 0.8em;
+}
+
+.page-section#signup .form-floating > .form-control {
+    height: 4rem;
 }
