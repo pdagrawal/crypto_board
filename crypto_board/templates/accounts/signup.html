@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h2>Sign Up</h2>
+    <form id="signupForm" name="signup" novalidate="novalidate" method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-floating mb-3">
+                {{ field }}
+                {{ field.label_tag }}
+                {% for error in field.errors %}
+                    <p class="help-block text-danger">{{error}}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <!-- Submit Button-->
+        <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Sign Up</button>
+    </form>
+{% endblock %}
