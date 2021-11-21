@@ -29,6 +29,20 @@ def signup(request: HttpRequest) -> HttpResponse:
 
             if User.objects.filter(username = username):
                 messages.error(request, 'Username already taken! Please try another username')
+
+            if User.objects.filter(email = email):
+                messages.error(request, 'Email already registered!')
+
+            if len(username) < 3:
+                messages.error(request, 'Username must be at least 3 character long!')
+
+            if password != confirm_password:
+                messages.error(request, "Passwords don't match!")
+
+            if not username.isalnum():
+                messages.error(request, "Username must be alphanumeric!")
+
+            if len(list(messages.get_messages(request))) > 0:
                 return render(request, "accounts/signup.html", {"form": form})
 
             user = User.objects.create_user(username, email, password)
