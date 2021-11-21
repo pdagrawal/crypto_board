@@ -8,6 +8,7 @@ urlpatterns = [
     path("profile", views.ProfileView.as_view(), name="profile"),
     # path("signup", views.SignupView.as_view(), name="signup"),
     path("signup", views.signup, name="signup"),
+    path("activate/<uidb64>/<token>", views.activate, name="activate"),
     # Django Auth
     path(
         "login",
