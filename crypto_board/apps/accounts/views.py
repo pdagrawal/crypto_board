@@ -27,6 +27,10 @@ def signup(request: HttpRequest) -> HttpResponse:
             password = bleach.clean(form.cleaned_data["password"])
             confirm_password = bleach.clean(form.cleaned_data["confirm_password"])
 
+            if User.objects.filter(username = username):
+                messages.error(request, 'Username already taken! Please try another username')
+                return render(request, "accounts/signup.html", {"form": form})
+
             user = User.objects.create_user(username, email, password)
             user.first_name = first_name
             user.last_name = last_name

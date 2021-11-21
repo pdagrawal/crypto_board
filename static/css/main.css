@@ -50,3 +50,8 @@
 .page-section#signup .form-floating > .form-control {
     height: 4rem;
 }
+.alert-error {
+    background-color: #f2dede;
+    border-color: #ebcccc;
+    color: #a94442;
+}
