@@ -57,8 +57,6 @@ def signup(request: HttpRequest) -> HttpResponse:
             user.is_active = False
             user.save()
             messages.success(request, "Your account has been successfully created. We have sent you a confirmation email. Please check to activate your account.")
-            # email_content = "Hello " + first_name + "\n\nWelcome to CryptoBoard!! \nPlease confirm your email address and start creating your first secure board to collaborate with your friends.\n\n"
-            # send_mail(f, email_content, settings.DEFAULT_FROM_EMAIL, [email], fail_silently=True)
             current_site = get_current_site(request)
             email_subject = "Welcome to CryptoBoard! Confirm Your Email"
             email_content = render_to_string('accounts/signup_email.html', {
