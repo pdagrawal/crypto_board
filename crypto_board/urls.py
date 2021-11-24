@@ -22,5 +22,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("crypto_board.apps.public.urls")),
     path("accounts/", include("crypto_board.apps.accounts.urls")),
+    path("boards/", include("crypto_board.apps.boards.urls")),
     path("contact/", include("crypto_board.apps.contact.urls")),
 ]
