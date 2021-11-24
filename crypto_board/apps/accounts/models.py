@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 class UserInterest(models.Model):
     name = models.CharField(max_length=64, unique=True)
     normalized_name = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -14,6 +16,8 @@ class UserPersona(models.Model):
     name = models.CharField(max_length=64, unique=True)
     normalized_name = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -31,3 +35,5 @@ class UserProfile(models.Model):
         UserPersona, on_delete=models.SET_NULL, blank=True, null=True
     )
     interests = models.ManyToManyField(UserInterest, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

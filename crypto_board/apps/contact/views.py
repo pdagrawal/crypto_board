@@ -2,6 +2,7 @@ import bleach
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from django.core.mail import send_mail
+from crypto_board.apps.contact.models import Contact
 
 from crypto_board import settings
 
@@ -16,6 +17,8 @@ def contact(request: HttpRequest) -> HttpResponse:
             name = bleach.clean(form.cleaned_data["name"])
             email = bleach.clean(form.cleaned_data["email"])
             message = bleach.clean(form.cleaned_data["message"])
+            contact = Contact(name=name, email=email, message=message)
+            contact.save()
             send_mail(f"{name} sent an email | {email}", message, settings.DEFAULT_FROM_EMAIL, [settings.DEFAULT_FROM_EMAIL])
             return render(request, "contact.html", {"form": ContactForm(), "success": True})
     else:
