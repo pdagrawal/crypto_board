@@ -5,6 +5,36 @@
 
 {% block content %}
     <div class="container-md">
-        <h1>Board Versions</h1>
+        <h1>Board Name - Version History</h1>
+
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Version No.</th>
+                <th scope="col">Modified By</th>
+                <th scope="col">Last Modified</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td><a href="#">RESTORE</a></td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td><a href="#">RESTORE</a></td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td><a href="#">RESTORE</a></td>
+              </tr>
+            </tbody>
+          </table>
     </div>
 {% endblock %}
