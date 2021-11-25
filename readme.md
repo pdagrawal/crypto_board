@@ -1,3 +1,4 @@
+## CRYPTOBOARD
 ![Devise Logo](https://github.com/p98a/crypto_board/blob/master/CryptoBoard_image.jpeg)
 
 Devise is a flexible authentication solution for Rails based on Warden. It:
