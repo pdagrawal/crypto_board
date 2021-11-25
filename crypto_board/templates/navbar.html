@@ -1,4 +1,5 @@
 {% url 'public:index' as index_url %}
+{% url 'boards:index' as boards_url %}
 {% url 'public:about' as about_url %}
 {% url 'contact:contact' as contact_url %}
 {% url 'accounts:profile' as profile_url %}
@@ -11,7 +12,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded{% if request.path == index_url %} active{% endif %}" href="{{ index_url }}">Home</a></li>
+        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded{% if request.path == boards_url %} active{% endif %}" href="{{ boards_url }}">Home</a></li>
         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded{% if request.path == about_url %} active{% endif %}" href="{{ about_url }}">About</a></li>
         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded{% if request.path == contact_url %} active{% endif %}" href="{{ contact_url }}">Contact</a></li>
         {% if user.is_authenticated %}
