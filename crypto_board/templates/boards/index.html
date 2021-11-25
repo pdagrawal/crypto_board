@@ -23,7 +23,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ board.board_title }}</h5>
                             <p class="card-text">{{ board.owner_name }}</p>
-                            <a href="{% url 'boards:show' id=board.id %}"> View</a>
+                            <a href="{% url 'boards:show' id=board.reference %}"> View</a>
                         </div>
                     </div>
                 </div>

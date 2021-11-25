@@ -12,7 +12,7 @@ def index(request):
 
 @login_required
 def show(request, id):
-    board = Board.objects.get(pk=id)
+    board = Board.objects.get(reference=id)
     return render(request, "boards/show.html", {'board': board})
 
 @login_required
@@ -31,13 +31,14 @@ def new(request):
 
 @login_required
 def edit(request, id):
-    board = Board.objects.get(pk=id)
-    version = BoardVersion.objects.filter(board_id=board.id).latest('id')
-    if version is None:
-        print('Version none')
+    board = Board.objects.get(reference=id)
+    try:
+        version = BoardVersion.objects.filter(board_id=board.id).latest('id')
+    except BoardVersion.DoesNotExist:
         version = BoardVersion(content="", board=board, modified_by=request.user)
     return render(request, "boards/edit.html", {'board': board, 'version': version})
 
 @login_required
-def board_versions(request, id):
-    return render(request, "boards/board_versions.html")
+def versions(request, id):
+    board = Board.objects.get(reference=id)
+    return render(request, "boards/versions.html", {'board': board})

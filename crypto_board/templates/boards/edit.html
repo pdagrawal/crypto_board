@@ -3,8 +3,15 @@
 {% block title %}Boards{% endblock %}
 
 {% block content %}
-<br><br>
-<h1 style="text-align: center;">{{ board.name }}</h1>
+<br>
+<div class="row">
+    <div class="col-md-10">
+        <h1 style="text-align: center;">{{ board.name }}</h1>
+    </div>
+    <div class="col-md-2">
+        <a class="btn btn-primary" href="{% url 'boards:versions' id=board.reference %}">Previous Versions</a>
+    </div>
+</div>
 <style>
     .square-box {
         max-width: 600px;

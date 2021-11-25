@@ -86,3 +86,11 @@
     min-height: 600px;
     border: 1px solid #333;
 }
+
+.pull-right {
+    float: right;
+}
+
+.pull-left {
+    float: left;
+}

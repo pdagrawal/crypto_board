@@ -5,7 +5,7 @@
 {% block content %}
     <h1 class="text-align-center">{{ board.name }}</h1>
     <div class="container-md text-center">
-      <a class="btn btn-primary" href="{% url 'boards:edit' id=board.id %}">Edit</a>
+      <a class="btn btn-primary" href="{% url 'boards:edit' id=board.reference %}">Edit</a>
       <button type="button" class="btn btn-secondary">Share</button>
       </div>
       <br><br>
