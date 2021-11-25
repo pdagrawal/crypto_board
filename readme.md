@@ -11,8 +11,12 @@ Features:
 ## Steps to start running CryptoBoard
 Please follow below steps to start the implementation of CryptoBoard Application.
 
-*Install Python 3.0 or higher, Django, Docker in your local system.
-*Clone the code from the github link into local (----)
-*Open Docker and execute "make build" and the execute "make compose start" to start the application.
-*Now go to the url http://localhost:8000/ for accessing the Home page of the application.
+- Install Python 3.0 or higher, Django, Docker in your local system.
+- Clone the code from the github link into local (----)
+- Open Docker and execute "make build" and the execute "make compose start" to start the application.
+- Now go to the url http://localhost:8000/ for accessing the Home page of the application.
 
+
+- dgkfljd
+    - jdkfsjdf
+    - sjfkdgjk
