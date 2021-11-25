@@ -17,6 +17,13 @@ class Board(models.Model):
     def board_title(self):
         return self.name[:20]
 
+    def latest_content(self):
+        version = BoardVersion.objects.filter(board_id=self.id).latest('id')
+        if version is not None:
+            return version.content
+        else:
+            return 'Blank'
+
 class BoardVersion(models.Model):
     content = models.TextField()
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
