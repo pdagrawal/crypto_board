@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+
+from crypto_board.apps.boards.models import Board
 
 def index(request):
-    return render(request, "boards/index.html")
+    boards = Board.objects.all().order_by('-created_at')
+    return render(request, "boards/index.html", {'boards': boards})
 
 def show(request, id):
     return render(request, "boards/show.html")

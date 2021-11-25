@@ -4,58 +4,25 @@
 {% block title %}Boards{% endblock %}
 
 {% block content %}
-<div class="container-md">
-        <h1>Boards Listing Page</h1>
-        </div>
+    <div class="container-md">
+        <h1>My Boards</h1>
+    </div>
 
     <div class="container-md">
-    <div class="row">
-        <div class="col-md-3">
-          <div class="card text-center">
-            <img class="masthead-avatar mb-5" src="{% static 'img/boardimg.jpeg' %}" alt="..." />
+        <div class="row">
+            {% for board in boards %}
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <img class="masthead-avatar mb-5" src="{% static 'img/boardimg.jpeg' %}" alt="..." />
 
-            <div class="card-body">
-                <h5 class="card-title"> BOARD 1 </h5>
-                <p class="card-text"> Some Text </p>
-                <a href=" #"> Check Board</a>
-            </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ board.board_title }}</h5>
+                            <p class="card-text">{{ board.owner_name }}</p>
+                            <a href="{% url 'boards:show' id=board.id %}"> View</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card text-center">
-            <img class="masthead-avatar mb-5" src="{% static 'img/boardimg.jpeg' %}" alt="..." />
-
-          <div class="card-body">
-              <h5 class="card-title"> BOARD 1 </h5>
-              <p class="card-text"> Some Text </p>
-              <a href=" #"> Check Board</a>
-          </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-center">
-            <img class="masthead-avatar mb-5" src="{% static 'img/boardimg.jpeg' %}" alt="..." />
-
-          <div class="card-body">
-              <h5 class="card-title"> BOARD 1 </h5>
-              <p class="card-text"> Some Text </p>
-              <a href=" #"> Check Board</a>
-          </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-center">
-            <img class="masthead-avatar mb-5" src="{% static 'img/boardimg.jpeg' %}" alt="..." />
-
-          <div class="card-body">
-              <h5 class="card-title"> BOARD 1 </h5>
-              <p class="card-text"> Some Text </p>
-              <a href=" #"> Check Board</a>
-          </div>
-      </div>
-    </div>
-      
-    </div>
-          
     </div>
 {% endblock %}
