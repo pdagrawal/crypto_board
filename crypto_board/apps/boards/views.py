@@ -7,7 +7,11 @@ def index(request):
     return render(request, "boards/index.html", {'boards': boards})
 
 def show(request, id):
-    return render(request, "boards/show.html")
+    board = Board.objects.get(pk=id)
+    return render(request, "boards/show.html", {'board': board})
 
 def edit(request, id):
     return render(request, "boards/edit.html")
+
+def board_versions(request, id):
+    return render(request, "boards/board_versions.html")

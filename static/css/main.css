@@ -1,11 +1,4 @@
-#main {
-    padding-top: 74px;
-}
-
 @media (min-width: 992px) {
-    #main {
-        padding-top: 104px;
-    }
     .masthead {
         padding-top: 6rem;
         padding-bottom: 6rem;
@@ -82,4 +75,14 @@
     background-color: #f2dede;
     border-color: #ebcccc;
     color: #a94442;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.square-box{
+    max-width: 600px;
+    min-height: 600px;
+    border: 1px solid #333;
 }
