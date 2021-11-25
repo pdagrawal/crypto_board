@@ -6,7 +6,7 @@
     <h1 class="text-align-center">{{ board.name }}</h1>
     <div class="container-md text-center">
       <a class="btn btn-primary" href="{% url 'boards:edit' id=board.reference %}">Edit</a>
-      <button type="button" class="btn btn-secondary">Share</button>
+      <a class="btn btn-info" href="{% url 'boards:share' id=board.reference %}">Share</a>
       </div>
       <br><br>
       <div class="container square-box d-flex justify-content-center">

@@ -2,12 +2,15 @@ import bleach
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 
-from crypto_board.apps.boards.models import Board, BoardVersion
+from crypto_board.apps.boards.models import Board, BoardVersion, BoardUser
 from .forms import BoardForm
 
 @login_required
 def index(request):
+    # boards_ids = Board.objects.filter(owner_id = request.user.id)
+    # BoardUser.objects.filter(user = request.user)
     boards = Board.objects.all().order_by('-created_at')
+    # boards = Board.objects.filter(pk__in=boards_ids).order_by('-created_at')
     return render(request, "boards/index.html", {'boards': boards})
 
 @login_required
@@ -27,7 +30,9 @@ def new(request):
             board = Board(name=name, owner=request.user)
             board.set_reference_number()
             board.save()
-            return redirect('boards:edit', id = board.id)
+            board_user = BoardUser(user=request.user, permission='owner', board=board)
+            board_user.save()
+            return redirect('boards:edit', id = board.reference)
 
 @login_required
 def edit(request, id):
@@ -38,6 +43,11 @@ def edit(request, id):
         version = BoardVersion(content="", board=board, modified_by=request.user)
         version.save()
     return render(request, "boards/edit.html", {'board': board, 'version': version})
+
+@login_required
+def share(request, id):
+    board = Board.objects.get(reference=id)
+    return render(request, "boards/share.html", {'board': board})
 
 @login_required
 def versions(request, id):
