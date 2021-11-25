@@ -2,15 +2,15 @@ import bleach
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth.models import User
 from crypto_board.apps.boards.models import Board, BoardVersion, BoardUser
 from .forms import BoardForm
 
 @login_required
 def index(request):
-    # boards_ids = Board.objects.filter(owner_id = request.user.id)
-    # BoardUser.objects.filter(user = request.user)
-    boards = Board.objects.all().order_by('-created_at')
-    # boards = Board.objects.filter(pk__in=boards_ids).order_by('-created_at')
+    boards_ids = list(Board.objects.filter(owner_id = request.user.id).values_list('id', flat=True))
+    boards_ids += list(BoardUser.objects.filter(user = request.user.id).values_list('board_id', flat=True))
+    boards = Board.objects.filter(pk__in=boards_ids).order_by('-created_at')
     return render(request, "boards/index.html", {'boards': boards})
 
 @login_required
@@ -46,8 +46,18 @@ def edit(request, id):
 
 @login_required
 def share(request, id):
-    board = Board.objects.get(reference=id)
-    return render(request, "boards/share.html", {'board': board})
+    if request.method == 'GET':
+        board = Board.objects.get(reference=id)
+        existing_user_ids = BoardUser.objects.filter(board_id=9).values_list('user_id', flat=True)
+        data_for_options = User.objects.all().exclude(id__in=existing_user_ids).values_list('id', 'first_name', 'last_name')
+        return render(request, "boards/share.html", {'board': board, 'data_for_options': data_for_options})
+    elif request.method == 'POST':
+        board = Board.objects.get(reference=id)
+        user_id = bleach.clean(request.POST.get("user_id"))
+        permission = bleach.clean(request.POST.get("permission"))
+        board_user = BoardUser(board=board, user_id=user_id, permission=permission)
+        board_user.save()
+        return redirect('boards:show', id = board.reference)
 
 @login_required
 def versions(request, id):

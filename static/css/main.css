@@ -94,3 +94,8 @@
 .pull-left {
     float: left;
 }
+
+#share-board .form-floating > .form-control:focus, .form-floating > .form-control:not(:placeholder-shown){
+    padding-top: 0;
+    padding-bottom: 0;
+}
