@@ -10,6 +10,8 @@
       </div>
       <br><br>
       <div class="container square-box d-flex justify-content-center">
-        <p>{{ board.latest_content }}</p>
+        {% autoescape off %}
+          <p>{{ board.latest_content }}</p>
+        {% endautoescape %}
       </div>
 {% endblock %}

@@ -26,7 +26,7 @@
             <td>{{ forloop.counter }}</th>
             <td>{{ version.modified_by_name }}</td>
             <td>{{ version.created_at }}</td>
-            <td>{{ version.content }}</td>
+            <td>{% autoescape off %}{{ version.content }}{% endautoescape %}</td>
             <td><a href="{% url 'boards:restore_version' version_id=version.id %}">RESTORE</a></td>
           </tr>
         {% endfor %}
