@@ -4,7 +4,7 @@
 
 {% block content %}
 <br><br>
-<h1 style="text-align: center;">Name of the Board</h1>
+<h1 style="text-align: center;">{{ board.name }}</h1>
 <style>
     .square-box {
         max-width: 600px;
@@ -14,7 +14,7 @@
 </style>
 <br>
 <div class="container square-box d-flex justify-content-center">
-    <p>DUMMY TEXT</p>
+    <p>{{ version.content }}</p>
 </div>
 <br>
 <div class="container-md text-center">

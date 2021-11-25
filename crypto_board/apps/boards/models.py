@@ -1,9 +1,10 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
 class Board(models.Model):
     name = models.CharField(max_length=200)
-    owner = models.ForeignKey(User, on_delete=models.RESTRICT)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     reference = models.CharField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -22,11 +23,20 @@ class Board(models.Model):
         if version is not None:
             return version.content
         else:
-            return 'Blank'
+            return 'Blank Text'
+
+    def set_reference_number(self):
+        reference_number = uuid.uuid4()
+        if Board.objects.filter(reference=reference_number).exists():
+            self.set_reference_number()
+        else:
+            self.reference = reference_number
+            return self
 
 class BoardVersion(models.Model):
     content = models.TextField()
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -35,3 +45,13 @@ class BoardVersion(models.Model):
 
     def content_snippet(self):
         return self.content[:50]
+
+class BoardUser(models.Model):
+    board = models.ForeignKey(Board, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    permission = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.first_name

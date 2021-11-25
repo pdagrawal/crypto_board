@@ -5,10 +5,15 @@
 
 {% block content %}
     <div class="container-md">
-        <h1>My Boards</h1>
-    </div>
+        <div class="row">
+            <div class="col-md-10">
+                <h1>My Boards</h1>
+            </div>
+            <div class="col-md-2">
+                <a href="{% url 'boards:new' %}" class="btn btn-primary">Create board</a>
+            </div>
+        </div>
 
-    <div class="container-md">
         <div class="row">
             {% for board in boards %}
                 <div class="col-md-3">
