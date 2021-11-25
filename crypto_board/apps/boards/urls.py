@@ -9,4 +9,5 @@ urlpatterns = [
     path("<id>", views.show, name="show"),
     path("<id>/edit", views.edit, name="edit"),
     path("<id>/versions", views.versions, name="versions"),
+    path("restore_version/<version_id>", views.restore_version, name="restore_version"),
 ]

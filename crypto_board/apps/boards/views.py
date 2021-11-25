@@ -27,7 +27,7 @@ def new(request):
             board = Board(name=name, owner=request.user)
             board.set_reference_number()
             board.save()
-            return redirect('boards:edit', id= board.id)
+            return redirect('boards:edit', id = board.id)
 
 @login_required
 def edit(request, id):
@@ -36,9 +36,18 @@ def edit(request, id):
         version = BoardVersion.objects.filter(board_id=board.id).latest('id')
     except BoardVersion.DoesNotExist:
         version = BoardVersion(content="", board=board, modified_by=request.user)
+        version.save()
     return render(request, "boards/edit.html", {'board': board, 'version': version})
 
 @login_required
 def versions(request, id):
     board = Board.objects.get(reference=id)
-    return render(request, "boards/versions.html", {'board': board})
+    versions = board.versions().order_by('-created_at')
+    return render(request, "boards/versions.html", {'board': board, 'versions': versions})
+
+@login_required
+def restore_version(request, version_id):
+    version = BoardVersion.objects.get(pk=version_id)
+    new_version = BoardVersion(content=version.content, board=version.board, modified_by=request.user)
+    new_version.save()
+    return redirect('boards:show', id = new_version.board.reference)

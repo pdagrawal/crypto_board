@@ -6,7 +6,7 @@
 {% block content %}
   <div class="container-md">
     <br/>
-    <h1 class="pull-left">Board Name - Version History</h1>
+    <h1 class="pull-left">{{ board.name }} - Version History</h1>
     <div class="pull-right">
       <a class="btn btn-primary" href="{% url 'boards:show' id=board.reference %}"> Go back to board</a>
     </div>
@@ -15,28 +15,21 @@
         <tr>
           <th scope="col">Version No.</th>
           <th scope="col">Modified By</th>
-          <th scope="col">Last Modified</th>
+          <th scope="col">Modified At</th>
+          <th scope="col">Content</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td><a href="#">RESTORE</a></td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td><a href="#">RESTORE</a></td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td colspan="2">Larry the Bird</td>
-          <td><a href="#">RESTORE</a></td>
-        </tr>
+        {% for version in versions %}
+          <tr>
+            <td>{{ forloop.counter }}</th>
+            <td>{{ version.modified_by_name }}</td>
+            <td>{{ version.created_at }}</td>
+            <td>{{ version.content }}</td>
+            <td><a href="{% url 'boards:restore_version' version_id=version.id %}">RESTORE</a></td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>

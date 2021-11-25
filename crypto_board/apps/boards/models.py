@@ -33,6 +33,9 @@ class Board(models.Model):
             self.reference = reference_number
             return self
 
+    def versions(self):
+        return BoardVersion.objects.filter(board_id=self.id)
+
 class BoardVersion(models.Model):
     content = models.TextField()
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
@@ -45,6 +48,9 @@ class BoardVersion(models.Model):
 
     def content_snippet(self):
         return self.content[:50]
+
+    def modified_by_name(self):
+        return (self.modified_by.first_name + ' ' + self.modified_by.last_name)
 
 class BoardUser(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
