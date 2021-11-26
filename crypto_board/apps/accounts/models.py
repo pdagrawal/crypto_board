@@ -23,7 +23,6 @@ class UserPersona(models.Model):
         return self.name
 
 
-# Create your models here.
 class UserProfile(models.Model):
     # owner
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")

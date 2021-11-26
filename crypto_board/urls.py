@@ -24,4 +24,5 @@ urlpatterns = [
     path("accounts/", include("crypto_board.apps.accounts.urls")),
     path("boards/", include("crypto_board.apps.boards.urls")),
     path("contact/", include("crypto_board.apps.contact.urls")),
+    path('tinymce/', include('tinymce.urls')),
 ]
