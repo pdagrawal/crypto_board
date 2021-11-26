@@ -12,16 +12,17 @@
         <a class="btn btn-primary" href="{% url 'boards:versions' id=board.reference %}">Previous Versions</a>
     </div>
 </div>
-<style>
-    .square-box {
-        max-width: 600px;
-        min-height: 600px;
-        border: 1px solid #333;
-    }
-</style>
 <br>
-<div class="container square-box d-flex justify-content-center">
-    <p>{{ version.content }}</p>
+<div class="container">
+    <form id="boardForm" name="createBoardContent" novalidate="novalidate" method="post">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            <textarea id="content" name="content" data-sb-validations="required">
+            {{ version.content }}
+            </textarea>
+        </div>
+        <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Create</button>
+    </form>
 </div>
 <br>
 <div class="container-md text-center">

@@ -9,9 +9,7 @@
       <a class="btn btn-info" href="{% url 'boards:share' id=board.reference %}">Share</a>
       </div>
       <br><br>
-      <div class="container square-box d-flex justify-content-center">
-        {% autoescape off %}
-          <p>{{ board.latest_content }}</p>
-        {% endautoescape %}
+      <div class="container square-box">
+        <p>{{ board.latest_content|safe }}</p>
       </div>
 {% endblock %}
