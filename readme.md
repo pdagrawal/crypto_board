@@ -28,4 +28,7 @@ Command 2:
 make compose start
 ```
 The compose up command aggregates the output of each container (essentially running docker-compose logs --follow). When the command exits, all containers are stopped. Running docker-compose up --detach starts the containers in the background and leaves them running.
-- Now go to the url http://localhost:8000/ for accessing the Home page of the application.
+- Now go to the url given below for accessing the Home page of the application.
+```
+http://localhost:8000/
+```
