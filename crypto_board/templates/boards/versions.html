@@ -5,7 +5,7 @@
 {% block content %}
   <div class="container-md">
     <br/>
-    <h1 class="pull-left">{{ board.name }} - Version History</h1>
+    <h1 class="pull-left">{{ board.decrypted_name }} - Version History</h1>
     <div class="pull-right">
       <a class="btn btn-primary" href="{% url 'boards:show' id=board.reference %}"> Go back to board</a>
     </div>
@@ -25,7 +25,7 @@
             <td>{{ forloop.counter }}</th>
             <td>{{ version.modified_by_name }}</td>
             <td>{{ version.created_at }}</td>
-            <td>{% autoescape off %}{{ version.content }}{% endautoescape %}</td>
+            <td>{% autoescape off %}{{ version.decrypted_content }}{% endautoescape %}</td>
             <td><a href="{% url 'boards:restore_version' version_id=version.id %}">RESTORE</a></td>
           </tr>
         {% endfor %}

@@ -2,6 +2,7 @@ import bleach
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from mirage.crypto import Crypto
 
 from django.contrib.auth.models import User
 from crypto_board.apps.boards.models import Board, BoardVersion, BoardUser
@@ -27,7 +28,8 @@ def new(request):
     elif request.method == 'POST':
         form = BoardForm(request.POST)
         if form.is_valid():
-            name = bleach.clean(form.cleaned_data["name"])
+            c = Crypto()
+            name = c.encrypt(bleach.clean(form.cleaned_data["name"]))
             board = Board(name=name, owner=request.user)
             board.set_reference_number()
             board.save()
@@ -47,8 +49,9 @@ def edit(request, id):
             version.save()
         return render(request, "boards/edit.html", {'board': board, 'version': version})
     elif request.method == 'POST':
+        c = Crypto()
         board = Board.objects.get(reference=id)
-        content = request.POST.get("content")
+        content = c.encrypt(request.POST.get("content"))
         version = BoardVersion(content=content, board=board, modified_by=request.user)
         version.save()
         messages.success(request, f"Changes on the board saved successfully.")
@@ -80,7 +83,8 @@ def versions(request, id):
 @login_required
 def restore_version(request, version_id):
     version = BoardVersion.objects.get(pk=version_id)
-    new_version = BoardVersion(content=version.content, board=version.board, modified_by=request.user)
+    c = Crypto()
+    new_version = BoardVersion(content=c.encrypt(version.content), board=version.board, modified_by=request.user)
     new_version.save()
     messages.success(request, "Board version restored successfully.")
     return redirect('boards:show', id = new_version.board.reference)

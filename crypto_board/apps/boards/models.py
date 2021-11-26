@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
+from mirage.crypto import Crypto
 
 class Board(models.Model):
     name = models.CharField(max_length=200)
@@ -15,15 +16,16 @@ class Board(models.Model):
     def owner_name(self):
         return self.owner.get_full_name()
 
-    def board_title(self):
-        return self.name[:20]
+    def decrypted_name(self):
+        c = Crypto()
+        return c.decrypt(self.name)
 
     def latest_content(self):
         version = BoardVersion.objects.filter(board_id=self.id).latest('id')
         if version is not None:
-            return version.content
+            return version.decrypted_content()
         else:
-            return 'Blank Text'
+            return ''
 
     def set_reference_number(self):
         reference_number = uuid.uuid4()
@@ -46,11 +48,12 @@ class BoardVersion(models.Model):
     def __str__(self):
         return self.board.name
 
-    def content_snippet(self):
-        return self.content[:50]
-
     def modified_by_name(self):
         return self.modified_by.get_full_name()
+
+    def decrypted_content(self):
+        c = Crypto()
+        return c.decrypt(self.content)
 
 class BoardUser(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)

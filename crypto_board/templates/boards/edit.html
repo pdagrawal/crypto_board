@@ -6,7 +6,7 @@
 <br>
 <div class="row">
     <div class="col-md-10">
-        <h1 style="text-align: center;">{{ board.name }}</h1>
+        <h1 style="text-align: center;">{{ board.decrypted_name }}</h1>
     </div>
     <div class="col-md-2">
         <a class="btn btn-primary" href="{% url 'boards:versions' id=board.reference %}">Previous Versions</a>
@@ -18,7 +18,7 @@
         {% csrf_token %}
         <div class="form-floating mb-3">
             <textarea class="richtext_content_field" name="content" data-sb-validations="required">
-            {{ version.content }}
+            {{ version.decrypted_content }}
             </textarea>
         </div>
         <div class="container-md text-center">

@@ -11,6 +11,7 @@ x-database-variables: &database-variables
 x-app-variables: &app-variables
   <<: *database-variables
   POSTGRES_HOST: postgres
+  SECRET_KEY: django-secure-i^00b63(@y*o&@33)582xx*5#1r%ks6c+ln4vc2h4&_ok@z=gn
 
 services:
   website:

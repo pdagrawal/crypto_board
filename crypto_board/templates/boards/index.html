@@ -21,7 +21,7 @@
                             {{ board.latest_content|safe }}
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">{{ board.board_title }}</h5>
+                            <h5 class="card-title">{{ board.decrypted_name }}</h5>
                             <p class="card-text">{{ board.owner_name }}</p>
                             <a href="{% url 'boards:show' id=board.reference %}"> View</a>
                         </div>
