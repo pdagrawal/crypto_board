@@ -38,13 +38,21 @@ def new(request):
 
 @login_required
 def edit(request, id):
-    board = Board.objects.get(reference=id)
-    try:
-        version = BoardVersion.objects.filter(board_id=board.id).latest('id')
-    except BoardVersion.DoesNotExist:
-        version = BoardVersion(content="", board=board, modified_by=request.user)
+    if request.method == 'GET':
+        board = Board.objects.get(reference=id)
+        try:
+            version = BoardVersion.objects.filter(board_id=board.id).latest('id')
+        except BoardVersion.DoesNotExist:
+            version = BoardVersion(content="", board=board, modified_by=request.user)
+            version.save()
+        return render(request, "boards/edit.html", {'board': board, 'version': version})
+    elif request.method == 'POST':
+        board = Board.objects.get(reference=id)
+        content = request.POST.get("content")
+        version = BoardVersion(content=content, board=board, modified_by=request.user)
         version.save()
-    return render(request, "boards/edit.html", {'board': board, 'version': version})
+        messages.success(request, f"Changes on the board saved successfully.")
+        return redirect('boards:show', id = board.reference)
 
 @login_required
 def share(request, id):
