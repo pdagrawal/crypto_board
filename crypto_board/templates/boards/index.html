@@ -14,12 +14,13 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row boards">
             {% for board in boards %}
                 <div class="col-md-3">
                     <div class="card text-center">
-                        <img class="masthead-avatar mb-5" src="{% static 'img/boardimg.jpeg' %}" alt="..." />
-
+                        <div class="content">
+                            {{ board.latest_content|safe }}
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ board.board_title }}</h5>
                             <p class="card-text">{{ board.owner_name }}</p>

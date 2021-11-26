@@ -98,3 +98,13 @@
     padding-top: 0;
     padding-bottom: 0;
 }
+
+.boards .card {
+    min-height: 320px;
+    max-height: 320px;
+}
+
+.boards .card .content {
+    min-height: 200px;
+    max-height: 200px;
+}
