@@ -47,12 +47,17 @@ def new(request):
 def edit(request, id):
     if request.method == 'GET':
         board = Board.objects.get(reference=id)
-        try:
-            version = BoardVersion.objects.filter(board_id=board.id).latest('id')
-        except BoardVersion.DoesNotExist:
-            version = BoardVersion(content="", board=board, modified_by=request.user)
-            version.save()
-        return render(request, "boards/edit.html", {'board': board, 'version': version})
+        board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
+        if request.user.id in board_users:
+            try:
+                version = BoardVersion.objects.filter(board_id=board.id).latest('id')
+            except BoardVersion.DoesNotExist:
+                version = BoardVersion(content="", board=board, modified_by=request.user)
+                version.save()
+            return render(request, "boards/edit.html", {'board': board, 'version': version})
+        else:
+            messages.error(request, "You don't have access to this board")
+            return render(request, "boards/index.html")
     elif request.method == 'POST':
         c = Crypto()
         board = Board.objects.get(reference=id)
@@ -66,9 +71,14 @@ def edit(request, id):
 def share(request, id):
     if request.method == 'GET':
         board = Board.objects.get(reference=id)
-        existing_user_ids = BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True)
-        data_for_options = User.objects.all().exclude(id__in=existing_user_ids).values_list('id', 'first_name', 'last_name')
-        return render(request, "boards/share.html", {'board': board, 'data_for_options': data_for_options})
+        board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
+        if request.user.id in board_users:
+            existing_user_ids = BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True)
+            data_for_options = User.objects.all().exclude(id__in=existing_user_ids).values_list('id', 'first_name', 'last_name')
+            return render(request, "boards/share.html", {'board': board, 'data_for_options': data_for_options})
+        else:
+            messages.error(request, "You don't have access to this board")
+            return render(request, "boards/index.html")
     elif request.method == 'POST':
         board = Board.objects.get(reference=id)
         user_id = bleach.clean(request.POST.get("user_id"))
@@ -82,8 +92,13 @@ def share(request, id):
 @login_required
 def versions(request, id):
     board = Board.objects.get(reference=id)
-    versions = board.versions().order_by('-created_at')
-    return render(request, "boards/versions.html", {'board': board, 'versions': versions})
+    board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
+    if request.user.id in board_users:
+        versions = board.versions().order_by('-created_at')
+        return render(request, "boards/versions.html", {'board': board, 'versions': versions})
+    else:
+        messages.error(request, "You don't have access to this board")
+        return render(request, "boards/index.html")
 
 @login_required
 def restore_version(request, version_id):
