@@ -32,3 +32,8 @@ The compose up command aggregates the output of each container (essentially runn
 ```
 http://localhost:8000/
 ```
+
+
+### NOTE:
+
+For Windows operarting systems, please install GUI compiler and enbale hyper-v in your system to run the application.
