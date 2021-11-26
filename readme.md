@@ -2,6 +2,7 @@
 ![Devise Logo](https://github.com/p98a/crypto_board/blob/master/CryptoBoard_image.jpeg)
 
 CryptoBoard, is an application which provides users a way to collaborate securely without being concerned about their data integrity and privacy being compromised.
+
 Features:
 * It is a Docker and Python based web application.
 * It provides users the ability to grant access to boards which they are authorized to and maintains the others boards encrypted.
@@ -16,7 +17,7 @@ Please follow below steps to start the implementation of CryptoBoard Application
 ```
 https://github.com/p98a/crypto_board
 ```
-- Open Docker and execute below 2 commands to setup the applicatoin environment.
+- Open Docker and execute the 2 commands given below to setup the application environment.
 Command 1:
 ```
 make build
@@ -28,8 +29,3 @@ make compose start
 ```
 The compose up command aggregates the output of each container (essentially running docker-compose logs --follow). When the command exits, all containers are stopped. Running docker-compose up --detach starts the containers in the background and leaves them running.
 - Now go to the url http://localhost:8000/ for accessing the Home page of the application.
-
-
-- dgkfljd
-    - jdkfsjdf
-    - sjfkdgjk
