@@ -17,7 +17,16 @@ Please follow below steps to start the implementation of CryptoBoard Application
 https://github.com/p98a/crypto_board
 ```
 - Open Docker and execute below 2 commands to setup the applicatoin environment.
--  "make build" and the execute "make compose start" to start the application.
+Command 1:
+```
+make build
+```
+The docker build command builds Docker images from a Dockerfile and a “context”. A build's context is the set of files located in the specified PATH or URL
+Command 2:
+```
+make compose start
+```
+The compose up command aggregates the output of each container (essentially running docker-compose logs --follow). When the command exits, all containers are stopped. Running docker-compose up --detach starts the containers in the background and leaves them running.
 - Now go to the url http://localhost:8000/ for accessing the Home page of the application.
 
 
