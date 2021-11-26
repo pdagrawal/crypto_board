@@ -18,7 +18,12 @@ def index(request):
 @login_required
 def show(request, id):
     board = Board.objects.get(reference=id)
-    return render(request, "boards/show.html", {'board': board})
+    board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
+    if request.user.id in board_users:
+        return render(request, "boards/show.html", {'board': board})
+    else:
+        messages.error(request, "You don't have access to this board")
+        return render(request, "boards/index.html")
 
 @login_required
 def new(request):
