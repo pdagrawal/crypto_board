@@ -13,7 +13,7 @@ class Board(models.Model):
         return self.name
 
     def owner_name(self):
-        return (self.owner.first_name + ' ' + self.owner.last_name)
+        return self.owner.get_full_name()
 
     def board_title(self):
         return self.name[:20]
@@ -50,7 +50,7 @@ class BoardVersion(models.Model):
         return self.content[:50]
 
     def modified_by_name(self):
-        return (self.modified_by.first_name + ' ' + self.modified_by.last_name)
+        return self.modified_by.get_full_name()
 
 class BoardUser(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
@@ -60,4 +60,4 @@ class BoardUser(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user.first_name
+        return f"{self.board.name}:{self.user.get_full_name()}"

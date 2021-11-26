@@ -1,6 +1,7 @@
 import bleach
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from django.contrib.auth.models import User
 from crypto_board.apps.boards.models import Board, BoardVersion, BoardUser
@@ -32,6 +33,7 @@ def new(request):
             board.save()
             board_user = BoardUser(user=request.user, permission='owner', board=board)
             board_user.save()
+            messages.success(request, "Board created successfully.")
             return redirect('boards:edit', id = board.reference)
 
 @login_required
@@ -48,15 +50,17 @@ def edit(request, id):
 def share(request, id):
     if request.method == 'GET':
         board = Board.objects.get(reference=id)
-        existing_user_ids = BoardUser.objects.filter(board_id=9).values_list('user_id', flat=True)
+        existing_user_ids = BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True)
         data_for_options = User.objects.all().exclude(id__in=existing_user_ids).values_list('id', 'first_name', 'last_name')
         return render(request, "boards/share.html", {'board': board, 'data_for_options': data_for_options})
     elif request.method == 'POST':
         board = Board.objects.get(reference=id)
         user_id = bleach.clean(request.POST.get("user_id"))
+        user = User.objects.get(pk=user_id)
         permission = bleach.clean(request.POST.get("permission"))
         board_user = BoardUser(board=board, user_id=user_id, permission=permission)
         board_user.save()
+        messages.success(request, f"Board shared with {user.get_full_name()} successfully.")
         return redirect('boards:show', id = board.reference)
 
 @login_required
@@ -70,4 +74,5 @@ def restore_version(request, version_id):
     version = BoardVersion.objects.get(pk=version_id)
     new_version = BoardVersion(content=version.content, board=version.board, modified_by=request.user)
     new_version.save()
+    messages.success(request, "Board version restored successfully.")
     return redirect('boards:show', id = new_version.board.reference)
