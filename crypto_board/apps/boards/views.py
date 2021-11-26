@@ -20,7 +20,8 @@ def show(request, id):
     board = Board.objects.get(reference=id)
     board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
     if request.user.id in board_users:
-        return render(request, "boards/show.html", {'board': board})
+        can_write = BoardUser.objects.get(board_id=board.id, user_id=request.user.id).permission != 'read'
+        return render(request, "boards/show.html", {'board': board, 'can_write': can_write})
     else:
         messages.error(request, "You don't have access to this board")
         return render(request, "boards/index.html")
