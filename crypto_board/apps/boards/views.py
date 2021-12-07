@@ -137,7 +137,9 @@ def versions(request, id):
 @login_required
 def restore_version(request, version_id):
     version = BoardVersion.objects.get(pk=version_id)
-    new_version = BoardVersion(content=version.content, board=version.board, modified_by=request.user)
+    previous_name = version.board.latest_name()
+    previous_name = '' if (previous_name is None) else previous_name
+    new_version = BoardVersion(name=previous_name, content=version.content, board=version.board, modified_by=request.user)
     new_version.save()
     messages.success(request, "Board version restored successfully.")
     return redirect('boards:show', id = new_version.board.reference)
