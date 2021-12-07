@@ -22,7 +22,7 @@ def show(request, id):
     if request.user.id in board_users:
         return render(request, "boards/show.html", {'board': board, 'can_write': board.can_write(request.user.id)})
     else:
-        messages.error(request, "You don't have access to this board")
+        messages.error(request, "You don't have permission to access this board!")
         return render(request, "boards/index.html")
 
 @login_required
@@ -55,7 +55,7 @@ def edit(request, id):
             version = BoardVersion.objects.filter(board_id=board.id).latest('id')
             return render(request, "boards/edit.html", {'board': board, 'version': version})
         else:
-            messages.error(request, "You don't have access to this board")
+            messages.error(request, "You don't have permission to access this page!")
             return render(request, "boards/index.html")
     elif request.method == 'POST':
         custom_enc_dec = CustomEncDec()
@@ -78,7 +78,7 @@ def rename(request, id):
             form = BoardForm()
             return render(request, "boards/rename.html", {'form': form, 'board': board, 'version': version})
         else:
-            messages.error(request, "You don't have access of this board")
+            messages.error(request, "You don't have permission to access this page!")
             return render(request, "boards/index.html")
     elif request.method == 'POST':
         custom_enc_dec = CustomEncDec()
@@ -101,7 +101,7 @@ def share(request, id):
             data_for_options = User.objects.all().exclude(id__in=existing_user_ids).values_list('id', 'first_name', 'last_name')
             return render(request, "boards/share.html", {'board': board, 'data_for_options': data_for_options, 'board_users': board_users})
         else:
-            messages.error(request, "You don't have access for this!")
+            messages.error(request, "You don't have permission to access this page!")
             return render(request, "boards/index.html")
     elif request.method == 'POST':
         board = Board.objects.get(reference=id)
@@ -131,7 +131,7 @@ def versions(request, id):
         versions = board.versions().order_by('-created_at')
         return render(request, "boards/versions.html", {'board': board, 'versions': versions})
     else:
-        messages.error(request, "You don't have access for this!")
+        messages.error(request, "You don't have permission to access this page!")
         return render(request, "boards/index.html")
 
 @login_required
