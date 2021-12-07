@@ -20,8 +20,7 @@ def show(request, id):
     board = Board.objects.get(reference=id)
     board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
     if request.user.id in board_users:
-        can_write = BoardUser.objects.get(board_id=board.id, user_id=request.user.id).permission != 'read'
-        return render(request, "boards/show.html", {'board': board, 'can_write': can_write})
+        return render(request, "boards/show.html", {'board': board, 'can_write': board.can_write(request.user.id)})
     else:
         messages.error(request, "You don't have access to this board")
         return render(request, "boards/index.html")
@@ -37,10 +36,13 @@ def new(request):
             board = Board(owner=request.user)
             board.set_reference_number()
             custom_enc_dec = CustomEncDec()
-            board.name = custom_enc_dec.encrypt(bleach.clean(form.cleaned_data["name"]), board.reference)
+            enc_name = custom_enc_dec.encrypt(bleach.clean(form.cleaned_data["name"]), board.reference)
+            board.name = enc_name
             board.save()
             board_user = BoardUser(user=request.user, permission='owner', board=board)
             board_user.save()
+            version = BoardVersion(name=enc_name, content="", board=board, modified_by=request.user)
+            version.save()
             messages.success(request, "Board created successfully.")
             return redirect('boards:edit', id = board.reference)
 
@@ -48,13 +50,9 @@ def new(request):
 def edit(request, id):
     if request.method == 'GET':
         board = Board.objects.get(reference=id)
-        board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
-        if request.user.id in board_users:
-            try:
-                version = BoardVersion.objects.filter(board_id=board.id).latest('id')
-            except BoardVersion.DoesNotExist:
-                version = BoardVersion(content="", board=board, modified_by=request.user)
-                version.save()
+        board_users_ids = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
+        if (request.user.id in board_users_ids) and (board.can_write(request.user.id)):
+            version = BoardVersion.objects.filter(board_id=board.id).latest('id')
             return render(request, "boards/edit.html", {'board': board, 'version': version})
         else:
             messages.error(request, "You don't have access to this board")
@@ -63,9 +61,33 @@ def edit(request, id):
         custom_enc_dec = CustomEncDec()
         board = Board.objects.get(reference=id)
         enc_content = custom_enc_dec.encrypt(request.POST.get("content"), board.reference)
-        version = BoardVersion(content=enc_content, board=board, modified_by=request.user)
+        previous_name = board.latest_name()
+        previous_name = '' if (previous_name is None) else previous_name
+        version = BoardVersion(name=previous_name, content=enc_content, board=board, modified_by=request.user)
         version.save()
         messages.success(request, f"Changes on the board saved successfully.")
+        return redirect('boards:show', id = board.reference)
+
+@login_required
+def rename(request, id):
+    board = Board.objects.get(reference=id)
+    if request.method == 'GET':
+        board_users_ids = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
+        if (request.user.id in board_users_ids) and (board.can_write(request.user.id)):
+            version = BoardVersion.objects.filter(board_id=board.id).latest('id')
+            form = BoardForm()
+            return render(request, "boards/rename.html", {'form': form, 'board': board, 'version': version})
+        else:
+            messages.error(request, "You don't have access of this board")
+            return render(request, "boards/index.html")
+    elif request.method == 'POST':
+        custom_enc_dec = CustomEncDec()
+        enc_name = custom_enc_dec.encrypt(request.POST.get("name"), board.reference)
+        previous_content = board.latest_content()
+        previous_content = '' if (previous_content is None) else previous_content
+        version = BoardVersion(name=enc_name, content=previous_content, board=board, modified_by=request.user)
+        version.save()
+        messages.success(request, f"Board renamed successfully.")
         return redirect('boards:show', id = board.reference)
 
 @login_required
@@ -74,12 +96,12 @@ def share(request, id):
         board = Board.objects.get(reference=id)
         board_users = BoardUser.objects.filter(board_id=board.id)
         board_users_ids = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
-        if request.user.id in board_users_ids:
+        if (request.user.id in board_users_ids) and (board.can_write(request.user.id)):
             existing_user_ids = BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True)
             data_for_options = User.objects.all().exclude(id__in=existing_user_ids).values_list('id', 'first_name', 'last_name')
             return render(request, "boards/share.html", {'board': board, 'data_for_options': data_for_options, 'board_users': board_users})
         else:
-            messages.error(request, "You don't have access to this board")
+            messages.error(request, "You don't have access for this!")
             return render(request, "boards/index.html")
     elif request.method == 'POST':
         board = Board.objects.get(reference=id)
@@ -105,11 +127,11 @@ def remove_board_user(request, board_user_id):
 def versions(request, id):
     board = Board.objects.get(reference=id)
     board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
-    if request.user.id in board_users:
+    if (request.user.id in board_users) and (board.can_write(request.user.id)):
         versions = board.versions().order_by('-created_at')
         return render(request, "boards/versions.html", {'board': board, 'versions': versions})
     else:
-        messages.error(request, "You don't have access to this board")
+        messages.error(request, "You don't have access for this!")
         return render(request, "boards/index.html")
 
 @login_required

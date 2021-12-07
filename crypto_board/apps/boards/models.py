@@ -18,15 +18,24 @@ class Board(models.Model):
         return self.owner.get_full_name()
 
     def decrypted_name(self):
-        custom_enc_dec = CustomEncDec()
-        return custom_enc_dec.decrypt(self.name, self.reference)
+        return self.decrypt(self.latest_name())
 
-    def latest_content(self):
+    def latest_name(self):
+        return BoardVersion.objects.filter(board_id=self.id).latest('id').name
+
+    def decrypt(self, body):
+        custom_enc_dec = CustomEncDec()
+        return custom_enc_dec.decrypt(body, self.reference)
+
+    def decrypted_content(self):
         version = BoardVersion.objects.filter(board_id=self.id).latest('id')
         if version is not None:
             return version.decrypted_content()
         else:
             return ''
+
+    def latest_content(self):
+        return BoardVersion.objects.filter(board_id=self.id).latest('id').content
 
     def set_reference_number(self):
         reference_number = uuid.uuid4().hex
@@ -39,7 +48,11 @@ class Board(models.Model):
     def versions(self):
         return BoardVersion.objects.filter(board_id=self.id)
 
+    def can_write(self, user_id):
+        return BoardUser.objects.get(board_id=self.id, user_id=user_id).permission != 'read'
+
 class BoardVersion(models.Model):
+    name = models.CharField(max_length=300, default="")
     content = models.TextField()
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     modified_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -51,6 +64,10 @@ class BoardVersion(models.Model):
 
     def modified_by_name(self):
         return self.modified_by.get_full_name()
+
+    def decrypted_name(self):
+        custom_enc_dec = CustomEncDec()
+        return custom_enc_dec.decrypt(self.name, self.board.reference)
 
     def decrypted_content(self):
         custom_enc_dec = CustomEncDec()
