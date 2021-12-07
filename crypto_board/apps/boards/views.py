@@ -2,11 +2,11 @@ import bleach
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from mirage.crypto import Crypto
 
 from django.contrib.auth.models import User
 from crypto_board.apps.boards.models import Board, BoardVersion, BoardUser
 from .forms import BoardForm
+from crypto_board.apps.boards.custom_enc_dec import CustomEncDec
 
 @login_required
 def index(request):
@@ -34,10 +34,10 @@ def new(request):
     elif request.method == 'POST':
         form = BoardForm(request.POST)
         if form.is_valid():
-            c = Crypto()
-            name = c.encrypt(bleach.clean(form.cleaned_data["name"]))
-            board = Board(name=name, owner=request.user)
+            board = Board(owner=request.user)
             board.set_reference_number()
+            custom_enc_dec = CustomEncDec()
+            board.name = custom_enc_dec.encrypt(bleach.clean(form.cleaned_data["name"]), board.reference)
             board.save()
             board_user = BoardUser(user=request.user, permission='owner', board=board)
             board_user.save()
@@ -60,10 +60,10 @@ def edit(request, id):
             messages.error(request, "You don't have access to this board")
             return render(request, "boards/index.html")
     elif request.method == 'POST':
-        c = Crypto()
+        custom_enc_dec = CustomEncDec()
         board = Board.objects.get(reference=id)
-        content = c.encrypt(request.POST.get("content"))
-        version = BoardVersion(content=content, board=board, modified_by=request.user)
+        enc_content = custom_enc_dec.encrypt(request.POST.get("content"), board.reference)
+        version = BoardVersion(content=enc_content, board=board, modified_by=request.user)
         version.save()
         messages.success(request, f"Changes on the board saved successfully.")
         return redirect('boards:show', id = board.reference)
@@ -104,8 +104,7 @@ def versions(request, id):
 @login_required
 def restore_version(request, version_id):
     version = BoardVersion.objects.get(pk=version_id)
-    c = Crypto()
-    new_version = BoardVersion(content=c.encrypt(version.content), board=version.board, modified_by=request.user)
+    new_version = BoardVersion(content=version.content, board=version.board, modified_by=request.user)
     new_version.save()
     messages.success(request, "Board version restored successfully.")
     return redirect('boards:show', id = new_version.board.reference)

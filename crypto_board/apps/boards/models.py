@@ -1,7 +1,8 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
-from mirage.crypto import Crypto
+
+from crypto_board.apps.boards.custom_enc_dec import CustomEncDec
 
 class Board(models.Model):
     name = models.CharField(max_length=200)
@@ -17,8 +18,8 @@ class Board(models.Model):
         return self.owner.get_full_name()
 
     def decrypted_name(self):
-        c = Crypto()
-        return c.decrypt(self.name)
+        custom_enc_dec = CustomEncDec()
+        return custom_enc_dec.decrypt(self.name, self.reference)
 
     def latest_content(self):
         version = BoardVersion.objects.filter(board_id=self.id).latest('id')
@@ -28,7 +29,7 @@ class Board(models.Model):
             return ''
 
     def set_reference_number(self):
-        reference_number = uuid.uuid4()
+        reference_number = uuid.uuid4().hex
         if Board.objects.filter(reference=reference_number).exists():
             self.set_reference_number()
         else:
@@ -52,8 +53,8 @@ class BoardVersion(models.Model):
         return self.modified_by.get_full_name()
 
     def decrypted_content(self):
-        c = Crypto()
-        return c.decrypt(self.content)
+        custom_enc_dec = CustomEncDec()
+        return custom_enc_dec.decrypt(self.content, self.board.reference)
 
 class BoardUser(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
