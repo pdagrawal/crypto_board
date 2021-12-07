@@ -3,4 +3,4 @@ psycopg2==2.9.1
 bleach==4.1.0
 six==1.16.0
 django-tinymce4-lite==1.8.0
-django-mirage-field==1.2.3
+django-mirage-field==1.2.4
