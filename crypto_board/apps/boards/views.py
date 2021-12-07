@@ -72,11 +72,12 @@ def edit(request, id):
 def share(request, id):
     if request.method == 'GET':
         board = Board.objects.get(reference=id)
-        board_users = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
-        if request.user.id in board_users:
+        board_users = BoardUser.objects.filter(board_id=board.id)
+        board_users_ids = list(BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True))
+        if request.user.id in board_users_ids:
             existing_user_ids = BoardUser.objects.filter(board_id=board.id).values_list('user_id', flat=True)
             data_for_options = User.objects.all().exclude(id__in=existing_user_ids).values_list('id', 'first_name', 'last_name')
-            return render(request, "boards/share.html", {'board': board, 'data_for_options': data_for_options})
+            return render(request, "boards/share.html", {'board': board, 'data_for_options': data_for_options, 'board_users': board_users})
         else:
             messages.error(request, "You don't have access to this board")
             return render(request, "boards/index.html")
@@ -88,7 +89,17 @@ def share(request, id):
         board_user = BoardUser(board=board, user_id=user_id, permission=permission)
         board_user.save()
         messages.success(request, f"Board shared with {user.get_full_name()} successfully.")
-        return redirect('boards:show', id = board.reference)
+        return redirect('boards:share', id = board.reference)
+
+@login_required
+def remove_board_user(request, board_user_id):
+    board_user = BoardUser.objects.get(pk=board_user_id)
+    if request.user.id == board_user.board.owner_id:
+        board_user.delete()
+        messages.success(request, "User removed successfully from the board.")
+    else:
+        messages.error(request, "You don't have rights to remove a user!")
+    return redirect('boards:share', id = board_user.board.reference)
 
 @login_required
 def versions(request, id):
