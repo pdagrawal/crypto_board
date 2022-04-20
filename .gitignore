@@ -1,3 +1,4 @@
 crypto_board/__pycache__/*
 **/__pycache__/
-creds.py
+crypto_board/creds.py
+crypto_board/__pycache__/*

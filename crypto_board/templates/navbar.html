@@ -17,7 +17,7 @@
         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded{% if request.path == contact_url %} active{% endif %}" href="{{ contact_url }}">Contact</a></li>
         {% if user.is_authenticated %}
           <li class="nav-item mx-0 mx-lg-1">
-            <a class="nav-link py-3 px-0 px-lg-3 rounded {% if request.path == profile_url %}active{% else %}{% endif %}" href="{{ profile_url }}">{{user.username}}</a>
+            <a class="nav-link py-3 px-0 px-lg-3 rounded {% if request.path == profile_url %}active{% else %}{% endif %}" href="{{ profile_url }}">{{user.first_name}}</a>
           </li>
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded bg-danger" href="{% url 'accounts:logout' %}">Logout</a></li>
         {% else %}
